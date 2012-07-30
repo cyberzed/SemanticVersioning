@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Ploeh.AutoFixture.Xunit;
 using Sleddog.SemanticVersioning;
 using Xunit;
@@ -29,6 +30,18 @@ namespace SemanticVersioning.Tests
 		                                                              string[] specialVersionParts)
 		{
 			Assert.Throws<ArgumentOutOfRangeException>(() => new SemanticVersion(major, minor, patch, specialVersionParts, versionType));
+		}
+
+		[Theory]
+		[InlineAutoData(VersionType.Build)]
+		public void ThrowsExceptionOnMalformedSpecialVersionParts(VersionType versionType, ushort major, ushort minor, ushort patch,
+		                                                          string[] specialVersionParts)
+		{
+			var malformedSpecialPart = ".,";
+
+			var versionParts = specialVersionParts.Concat(new[] {malformedSpecialPart});
+
+			Assert.Throws<ArgumentException>(() => new SemanticVersion(major, minor, patch, versionParts, versionType));
 		}
 	}
 }

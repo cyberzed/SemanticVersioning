@@ -1,11 +1,15 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace Sleddog.SemanticVersioning
 {
 	public class SemanticVersion
 	{
-		private readonly string[] specialVersionParts;
+		private static readonly Regex SpecialVersionPartRegex = new Regex(@"[0-9A-Za-z-]+");
+
+		private readonly List<string> specialVersionParts;
 
 		public SemanticVersion(ushort major, ushort minor, ushort patch)
 		{
@@ -16,9 +20,16 @@ namespace Sleddog.SemanticVersioning
 			VersionType = VersionType.Normal;
 		}
 
-		public SemanticVersion(ushort major, ushort minor, ushort patch, string[] specialVersionParts, VersionType versionType)
+		public SemanticVersion(ushort major, ushort minor, ushort patch, IEnumerable<string> specialVersionParts, VersionType versionType)
 		{
-			if (specialVersionParts.Any() && versionType == VersionType.Normal)
+			if (specialVersionParts == null)
+			{
+				throw new ArgumentNullException("specialVersionParts");
+			}
+
+			var specialPartsList = specialVersionParts.ToList();
+
+			if (specialPartsList.Any() && versionType == VersionType.Normal)
 			{
 				throw new ArgumentOutOfRangeException("specialVersionParts",
 				                                      "SemanticVersioning doesn't allow special versions unless versiontype is PreRelease or Build");
@@ -28,7 +39,9 @@ namespace Sleddog.SemanticVersioning
 			Minor = minor;
 			Patch = patch;
 
-			this.specialVersionParts = specialVersionParts;
+			ValidateSpecialVersionParts(specialPartsList);
+
+			this.specialVersionParts = specialPartsList;
 
 			VersionType = versionType;
 		}
@@ -43,6 +56,17 @@ namespace Sleddog.SemanticVersioning
 		}
 
 		public VersionType VersionType { get; private set; }
+
+		private void ValidateSpecialVersionParts(IEnumerable<string> versionParts)
+		{
+			foreach (var versionPart in versionParts)
+			{
+				if (!SpecialVersionPartRegex.IsMatch(versionPart))
+				{
+					throw new ArgumentException("SpecialVersionParts must comply with [0-9A-Za-z-]", "versionParts");
+				}
+			}
+		}
 
 		public override string ToString()
 		{
