@@ -90,7 +90,7 @@ namespace Sleddog.SemanticVersioning
 				case VersionType.Build:
 					return string.Format("{0}{1}", FindVersionTypePrefix(), string.Join(".", specialVersionParts));
 				default:
-					return string.Empty;
+					return null;
 			}
 		}
 
