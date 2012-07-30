@@ -1,4 +1,4 @@
-namespace SemanticVersioning
+namespace Sleddog.SemanticVersioning
 {
 	public enum VersionType
 	{
