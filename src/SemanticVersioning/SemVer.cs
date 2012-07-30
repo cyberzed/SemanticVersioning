@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -40,18 +41,18 @@ namespace SemanticVersioning
 			SpecialVersion = specialVersion;
 		}
 
+		public ushort Major { get; private set; }
+		public ushort Minor { get; private set; }
+		public ushort Patch { get; private set; }
+		public string SpecialVersion { get; private set; }
+		public VersionType VersionType { get; private set; }
+
 		private bool ValidateSpecialVersion(string specialVersion)
 		{
 			var specialVersionRegex = new Regex(@"^(?<prefix>[\+-])");
 
 			return false;
 		}
-
-		public ushort Major { get; private set; }
-		public ushort Minor { get; private set; }
-		public ushort Patch { get; private set; }
-		public string SpecialVersion { get; private set; }
-		public VersionType VersionType { get; private set; }
 
 		public override string ToString()
 		{
@@ -67,12 +68,5 @@ namespace SemanticVersioning
 					return base.ToString();
 			}
 		}
-	}
-
-	public enum VersionType
-	{
-		Normal,
-		PreRelease,
-		Build
 	}
 }
