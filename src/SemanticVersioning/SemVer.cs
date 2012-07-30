@@ -1,36 +1,10 @@
-﻿using System;
-using System.Text;
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 
 namespace SemanticVersioning
 {
 	public class SemVer
 	{
 		private const string BuildPrefix = "build";
-
-		public SemVer(Version version)
-		{
-			Major = Convert.ToUInt16(version.Major);
-			Minor = Convert.ToUInt16(version.Minor);
-
-			var specialVersion = new StringBuilder(BuildPrefix);
-
-			if (version.Build > 0)
-			{
-				specialVersion.AppendFormat(".{0}", version.Build);
-			}
-
-			if (version.Revision > 0)
-			{
-				specialVersion.AppendFormat(".{0}", version.Revision);
-			}
-
-			if (specialVersion.Length > BuildPrefix.Length)
-			{
-				SpecialVersion = specialVersion.ToString();
-				VersionType = VersionType.Build;
-			}
-		}
 
 		public SemVer(ushort major, ushort minor, ushort patch, string specialVersion)
 		{
