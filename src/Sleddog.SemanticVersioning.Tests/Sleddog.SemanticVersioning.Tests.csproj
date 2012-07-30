@@ -66,7 +66,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\SemanticVersioning\Sleddog.SemanticVersion.csproj">
+    <ProjectReference Include="..\Sleddog.SemanticVersioning\Sleddog.SemanticVersion.csproj">
       <Project>{9DE29054-6728-480F-A56D-5F28CE441DA1}</Project>
       <Name>Sleddog.SemanticVersion</Name>
     </ProjectReference>

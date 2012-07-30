@@ -1,9 +1,16 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sleddog.SemanticVersion", "SemanticVersioning\Sleddog.SemanticVersion.csproj", "{9DE29054-6728-480F-A56D-5F28CE441DA1}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sleddog.SemanticVersion", "Sleddog.SemanticVersioning\Sleddog.SemanticVersion.csproj", "{9DE29054-6728-480F-A56D-5F28CE441DA1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sleddog.SemanticVersioning.Tests", "SemanticVersioning.Tests\Sleddog.SemanticVersioning.Tests.csproj", "{6BD4871C-ABEF-4530-9386-2EA20E6B6BAE}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sleddog.SemanticVersioning.Tests", "Sleddog.SemanticVersioning.Tests\Sleddog.SemanticVersioning.Tests.csproj", "{6BD4871C-ABEF-4530-9386-2EA20E6B6BAE}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{CCFEDCBB-1E63-45A1-AC31-5000C8BE9399}"
+	ProjectSection(SolutionItems) = preProject
+		.nuget\NuGet.Config = .nuget\NuGet.Config
+		.nuget\nuget.exe = .nuget\nuget.exe
+		.nuget\NuGet.targets = .nuget\NuGet.targets
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
