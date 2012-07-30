@@ -1,4 +1,7 @@
-﻿namespace Sleddog.SemanticVersioning
+﻿using System;
+using System.Linq;
+
+namespace Sleddog.SemanticVersioning
 {
 	public class SemanticVersion
 	{
@@ -15,10 +18,18 @@
 
 		public SemanticVersion(ushort major, ushort minor, ushort patch, string[] specialVersionParts, VersionType versionType)
 		{
+			if (specialVersionParts.Any() && versionType == VersionType.Normal)
+			{
+				throw new ArgumentOutOfRangeException("specialVersionParts",
+				                                      "SemanticVersioning doesn't allow special versions unless versiontype is PreRelease or Build");
+			}
+
 			Major = major;
 			Minor = minor;
 			Patch = patch;
+
 			this.specialVersionParts = specialVersionParts;
+
 			VersionType = versionType;
 		}
 
