@@ -5,7 +5,7 @@ using System.Text.RegularExpressions;
 
 namespace Sleddog.SemanticVersioning
 {
-	public class SemanticVersion
+	public class SemanticVersion : IComparable, IComparable<SemanticVersion>, IEquatable<SemanticVersion>
 	{
 		private static readonly Regex SpecialVersionPartRegex = new Regex(@"[0-9A-Za-z-]+");
 
@@ -56,6 +56,33 @@ namespace Sleddog.SemanticVersioning
 		}
 
 		public VersionType VersionType { get; private set; }
+
+		public int CompareTo(object obj)
+		{
+			if (obj == null)
+			{
+				return 1;
+			}
+
+			var otherSemVer = obj as SemanticVersion;
+
+			if (otherSemVer == null)
+			{
+				throw new ArgumentException("Can not compare to something that is not a SemanticVersion", "obj");
+			}
+
+			return CompareTo(otherSemVer);
+		}
+
+		public int CompareTo(SemanticVersion other)
+		{
+			throw new NotImplementedException();
+		}
+
+		public bool Equals(SemanticVersion other)
+		{
+			throw new NotImplementedException();
+		}
 
 		private void ValidateSpecialVersionParts(IEnumerable<string> versionParts)
 		{
