@@ -44,5 +44,19 @@ namespace SemanticVersioning.Tests
 
 			Assert.True(actual > 0);
 		}
+
+		[Theory, AutoData]
+		public void SameSemanticVersionNumberIsEqual(ushort major, ushort minor, ushort patch)
+		{
+			var semVer1 = new SemanticVersion(major, minor, patch);
+			var semVer2 = new SemanticVersion(major, minor, patch);
+
+			var sut = new SemanticVersionComparer();
+
+			var expected = 0;
+			var actual = sut.Compare(semVer1, semVer2);
+
+			Assert.Equal(expected, actual);
+		}
 	}
 }
