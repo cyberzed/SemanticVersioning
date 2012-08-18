@@ -5,12 +5,14 @@ namespace Sleddog.SemanticVersioning
 {
 	public class SemanticVersionComparer : IComparer<SemanticVersion>
 	{
-		private readonly IDictionary<VersionType, Func<SemanticVersion, SemanticVersion, int>> comparisons =
-			new Dictionary<VersionType, Func<SemanticVersion, SemanticVersion, int>>();
+		private readonly IDictionary<SemanticVersionType, Func<SemanticVersion, SemanticVersion, int>> comparisons =
+			new Dictionary<SemanticVersionType, Func<SemanticVersion, SemanticVersion, int>>();
 
 		public SemanticVersionComparer()
 		{
-			comparisons.Add(VersionType.Normal, CompareNormalVersion);
+			comparisons.Add(SemanticVersionType.PreRelease, ComparePreReleaseVersion);
+			comparisons.Add(SemanticVersionType.Normal, CompareNormalVersion);
+			comparisons.Add(SemanticVersionType.Build, CompareBuildVersion);
 		}
 
 		public int Compare(SemanticVersion x, SemanticVersion y)
@@ -30,8 +32,8 @@ namespace Sleddog.SemanticVersioning
 				return 1;
 			}
 
-			var xVersionType = x.VersionType;
-			var yVersionType = y.VersionType;
+			var xVersionType = x.SemanticVersionType;
+			var yVersionType = y.SemanticVersionType;
 
 			if (xVersionType == yVersionType)
 			{
@@ -44,6 +46,11 @@ namespace Sleddog.SemanticVersioning
 
 				return xVersionValue.CompareTo(yVersionValue);
 			}
+		}
+
+		private int ComparePreReleaseVersion(SemanticVersion x, SemanticVersion y)
+		{
+			return -1;
 		}
 
 		private int CompareNormalVersion(SemanticVersion x, SemanticVersion y)
@@ -64,6 +71,11 @@ namespace Sleddog.SemanticVersioning
 			}
 
 			return 0;
+		}
+
+		private int CompareBuildVersion(SemanticVersion x, SemanticVersion y)
+		{
+			return -1;
 		}
 	}
 }

@@ -16,32 +16,32 @@ namespace SemanticVersioning.Tests
 		}
 
 		[Theory]
-		[InlineAutoData(VersionType.Build)]
-		[InlineAutoData(VersionType.PreRelease)]
-		public void CanInstantiateWithSpecialVersionWithNonNormalType(VersionType versionType, ushort major, ushort minor, ushort patch,
+		[InlineAutoData(SemanticVersionType.Build)]
+		[InlineAutoData(SemanticVersionType.PreRelease)]
+		public void CanInstantiateWithSpecialVersionWithNonNormalType(SemanticVersionType semanticVersionType, ushort major, ushort minor, ushort patch,
 		                                                              string[] specialVersionParts)
 		{
-			Assert.DoesNotThrow(() => new SemanticVersion(major, minor, patch, specialVersionParts, versionType));
+			Assert.DoesNotThrow(() => new SemanticVersion(major, minor, patch, specialVersionParts, semanticVersionType));
 		}
 
 		[Theory]
-		[InlineAutoData(VersionType.Normal)]
-		public void CanNotInstantiateWithSpecialVersionWithNormalType(VersionType versionType, ushort major, ushort minor, ushort patch,
+		[InlineAutoData(SemanticVersionType.Normal)]
+		public void CanNotInstantiateWithSpecialVersionWithNormalType(SemanticVersionType semanticVersionType, ushort major, ushort minor, ushort patch,
 		                                                              string[] specialVersionParts)
 		{
-			Assert.Throws<ArgumentOutOfRangeException>(() => new SemanticVersion(major, minor, patch, specialVersionParts, versionType));
+			Assert.Throws<ArgumentOutOfRangeException>(() => new SemanticVersion(major, minor, patch, specialVersionParts, semanticVersionType));
 		}
 
 		[Theory]
-		[InlineAutoData(VersionType.Build)]
-		public void ThrowsExceptionOnMalformedSpecialVersionParts(VersionType versionType, ushort major, ushort minor, ushort patch,
+		[InlineAutoData(SemanticVersionType.Build)]
+		public void ThrowsExceptionOnMalformedSpecialVersionParts(SemanticVersionType semanticVersionType, ushort major, ushort minor, ushort patch,
 		                                                          string[] specialVersionParts)
 		{
 			var malformedSpecialPart = ".,";
 
 			var versionParts = specialVersionParts.Concat(new[] {malformedSpecialPart});
 
-			Assert.Throws<ArgumentException>(() => new SemanticVersion(major, minor, patch, versionParts, versionType));
+			Assert.Throws<ArgumentException>(() => new SemanticVersion(major, minor, patch, versionParts, semanticVersionType));
 		}
 
 		[Theory, AutoData]
@@ -56,15 +56,15 @@ namespace SemanticVersioning.Tests
 		}
 
 		[Theory]
-		[InlineAutoData(VersionType.Build)]
-		[InlineAutoData(VersionType.PreRelease)]
-		public void SpecialVersionsGetsSetCorrectly(VersionType versionType, ushort major, ushort minor, ushort patch,
+		[InlineAutoData(SemanticVersionType.Build)]
+		[InlineAutoData(SemanticVersionType.PreRelease)]
+		public void SpecialVersionsGetsSetCorrectly(SemanticVersionType semanticVersionType, ushort major, ushort minor, ushort patch,
 		                                            string[] specialVersionParts)
 		{
-			var prefix = FindSpecialVersionPrefix(versionType);
+			var prefix = FindSpecialVersionPrefix(semanticVersionType);
 			var expectedSpecialVersion = string.Format("{0}{1}", prefix, string.Join(".", specialVersionParts));
 
-			var sut = new SemanticVersion(major, minor, patch, specialVersionParts, versionType);
+			var sut = new SemanticVersion(major, minor, patch, specialVersionParts, semanticVersionType);
 
 			Assert.Equal(major, sut.Major);
 			Assert.Equal(minor, sut.Minor);
@@ -72,13 +72,13 @@ namespace SemanticVersioning.Tests
 			Assert.Equal(expectedSpecialVersion, sut.SpecialVersion);
 		}
 
-		private string FindSpecialVersionPrefix(VersionType versionType)
+		private string FindSpecialVersionPrefix(SemanticVersionType semanticVersionType)
 		{
-			switch (versionType)
+			switch (semanticVersionType)
 			{
-				case VersionType.PreRelease:
+				case SemanticVersionType.PreRelease:
 					return "-";
-				case VersionType.Build:
+				case SemanticVersionType.Build:
 					return "+";
 				default:
 					return null;

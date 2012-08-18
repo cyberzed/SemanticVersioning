@@ -1,6 +1,6 @@
 namespace Sleddog.SemanticVersioning
 {
-	public enum VersionType
+	public enum SemanticVersionType
 	{
 		Normal = 0,
 		PreRelease = -1,

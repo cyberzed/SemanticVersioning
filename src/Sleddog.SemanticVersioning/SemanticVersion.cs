@@ -17,10 +17,10 @@ namespace Sleddog.SemanticVersioning
 			Minor = minor;
 			Patch = patch;
 
-			VersionType = VersionType.Normal;
+			SemanticVersionType = SemanticVersionType.Normal;
 		}
 
-		public SemanticVersion(ushort major, ushort minor, ushort patch, IEnumerable<string> specialVersionParts, VersionType versionType)
+		public SemanticVersion(ushort major, ushort minor, ushort patch, IEnumerable<string> specialVersionParts, SemanticVersionType semanticVersionType)
 		{
 			if (specialVersionParts == null)
 			{
@@ -29,7 +29,7 @@ namespace Sleddog.SemanticVersioning
 
 			var specialPartsList = specialVersionParts.ToList();
 
-			if (specialPartsList.Any() && versionType == VersionType.Normal)
+			if (specialPartsList.Any() && semanticVersionType == SemanticVersionType.Normal)
 			{
 				throw new ArgumentOutOfRangeException("specialVersionParts",
 				                                      "SemanticVersioning doesn't allow special versions unless versiontype is PreRelease or Build");
@@ -43,7 +43,7 @@ namespace Sleddog.SemanticVersioning
 
 			this.specialVersionParts = specialPartsList;
 
-			VersionType = versionType;
+			SemanticVersionType = semanticVersionType;
 		}
 
 		public ushort Major { get; private set; }
@@ -55,7 +55,7 @@ namespace Sleddog.SemanticVersioning
 			get { return FormatSpecialVersion(); }
 		}
 
-		public VersionType VersionType { get; private set; }
+		public SemanticVersionType SemanticVersionType { get; private set; }
 
 		public int CompareTo(object obj)
 		{
@@ -97,12 +97,12 @@ namespace Sleddog.SemanticVersioning
 
 		public override string ToString()
 		{
-			switch (VersionType)
+			switch (SemanticVersionType)
 			{
-				case VersionType.Normal:
+				case SemanticVersionType.Normal:
 					return string.Format("{0}.{1}.{2}", Major, Minor, Patch);
-				case VersionType.PreRelease:
-				case VersionType.Build:
+				case SemanticVersionType.PreRelease:
+				case SemanticVersionType.Build:
 					return string.Format("{0}.{1}.{2}{3}", Major, Minor, Patch, FormatSpecialVersion());
 				default:
 					return base.ToString();
@@ -111,10 +111,10 @@ namespace Sleddog.SemanticVersioning
 
 		private string FormatSpecialVersion()
 		{
-			switch (VersionType)
+			switch (SemanticVersionType)
 			{
-				case VersionType.PreRelease:
-				case VersionType.Build:
+				case SemanticVersionType.PreRelease:
+				case SemanticVersionType.Build:
 					return string.Format("{0}{1}", FindVersionTypePrefix(), string.Join(".", specialVersionParts));
 				default:
 					return null;
@@ -123,11 +123,11 @@ namespace Sleddog.SemanticVersioning
 
 		private string FindVersionTypePrefix()
 		{
-			switch (VersionType)
+			switch (SemanticVersionType)
 			{
-				case VersionType.PreRelease:
+				case SemanticVersionType.PreRelease:
 					return "-";
-				case VersionType.Build:
+				case SemanticVersionType.Build:
 					return "+";
 				default:
 					return string.Empty;

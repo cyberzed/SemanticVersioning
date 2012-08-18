@@ -26,6 +26,20 @@ namespace SemanticVersioning.Tests
 		}
 
 		[Theory, AutoData]
+		public void SameSemanticVersionNumberIsEqual(ushort major, ushort minor, ushort patch)
+		{
+			var semVer1 = new SemanticVersion(major, minor, patch);
+			var semVer2 = new SemanticVersion(major, minor, patch);
+
+			var sut = new SemanticVersionComparer();
+
+			var expected = 0;
+			var actual = sut.Compare(semVer1, semVer2);
+
+			Assert.Equal(expected, actual);
+		}
+
+		[Theory, AutoData]
 		public void SmallerVersionYieldsNegativeValue(SemanticVersion semVer1, SemanticVersion semVer2)
 		{
 			var sut = new SemanticVersionComparer();
@@ -45,18 +59,50 @@ namespace SemanticVersioning.Tests
 			Assert.True(actual > 0);
 		}
 
-		[Theory, AutoData]
-		public void SameSemanticVersionNumberIsEqual(ushort major, ushort minor, ushort patch)
+		[Theory]
+		[InlineAutoData(SemanticVersionType.PreRelease, SemanticVersionType.Normal,-1)]
+		[InlineAutoData(SemanticVersionType.PreRelease, SemanticVersionType.Build,-1)]
+		[InlineAutoData(SemanticVersionType.Normal, SemanticVersionType.Build,-1)]
+		public void DifferentVersionsArentEqual(SemanticVersionType semVerType1, SemanticVersionType semVerType2, int expected)
 		{
-			var semVer1 = new SemanticVersion(major, minor, patch);
-			var semVer2 = new SemanticVersion(major, minor, patch);
+			var semVer1 = CreateZeroVersion(semVerType1);
+			var semVer2 = CreateZeroVersion(semVerType2);
 
 			var sut = new SemanticVersionComparer();
 
-			var expected = 0;
 			var actual = sut.Compare(semVer1, semVer2);
 
 			Assert.Equal(expected, actual);
+		}
+
+		[Theory, AutoData]
+		public void XCompareToNullGivesAPositiveValue(SemanticVersion semVer)
+		{
+			var sut = new SemanticVersionComparer();
+
+			var actual = sut.Compare(semVer, null);
+
+			Assert.True(actual > 0);
+		}
+
+		[Theory, AutoData]
+		public void YComparetToNullGivesANegativeValue(SemanticVersion semVer)
+		{
+			var sut = new SemanticVersionComparer();
+
+			var actual = sut.Compare(null, semVer);
+
+			Assert.True(actual < 0);
+		}
+
+		private SemanticVersion CreateZeroVersion(SemanticVersionType semVerType)
+		{
+			if (semVerType == SemanticVersionType.Normal)
+			{
+				return new SemanticVersion(0, 0, 0);
+			}
+
+			return new SemanticVersion(0, 0, 0, new[] {"0"}, semVerType);
 		}
 	}
 }
