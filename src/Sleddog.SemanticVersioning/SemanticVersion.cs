@@ -20,7 +20,8 @@ namespace Sleddog.SemanticVersioning
 			SemanticVersionType = SemanticVersionType.Normal;
 		}
 
-		public SemanticVersion(ushort major, ushort minor, ushort patch, IEnumerable<string> specialVersionParts, SemanticVersionType semanticVersionType)
+		public SemanticVersion(ushort major, ushort minor, ushort patch, IEnumerable<string> specialVersionParts,
+		                       SemanticVersionType semanticVersionType)
 		{
 			if (specialVersionParts == null)
 			{

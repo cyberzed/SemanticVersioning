@@ -18,7 +18,8 @@ namespace SemanticVersioning.Tests
 		[Theory]
 		[InlineAutoData(SemanticVersionType.Build)]
 		[InlineAutoData(SemanticVersionType.PreRelease)]
-		public void CanInstantiateWithSpecialVersionWithNonNormalType(SemanticVersionType semanticVersionType, ushort major, ushort minor, ushort patch,
+		public void CanInstantiateWithSpecialVersionWithNonNormalType(SemanticVersionType semanticVersionType, ushort major, ushort minor,
+		                                                              ushort patch,
 		                                                              string[] specialVersionParts)
 		{
 			Assert.DoesNotThrow(() => new SemanticVersion(major, minor, patch, specialVersionParts, semanticVersionType));
@@ -26,7 +27,8 @@ namespace SemanticVersioning.Tests
 
 		[Theory]
 		[InlineAutoData(SemanticVersionType.Normal)]
-		public void CanNotInstantiateWithSpecialVersionWithNormalType(SemanticVersionType semanticVersionType, ushort major, ushort minor, ushort patch,
+		public void CanNotInstantiateWithSpecialVersionWithNormalType(SemanticVersionType semanticVersionType, ushort major, ushort minor,
+		                                                              ushort patch,
 		                                                              string[] specialVersionParts)
 		{
 			Assert.Throws<ArgumentOutOfRangeException>(() => new SemanticVersion(major, minor, patch, specialVersionParts, semanticVersionType));
@@ -34,7 +36,8 @@ namespace SemanticVersioning.Tests
 
 		[Theory]
 		[InlineAutoData(SemanticVersionType.Build)]
-		public void ThrowsExceptionOnMalformedSpecialVersionParts(SemanticVersionType semanticVersionType, ushort major, ushort minor, ushort patch,
+		public void ThrowsExceptionOnMalformedSpecialVersionParts(SemanticVersionType semanticVersionType, ushort major, ushort minor,
+		                                                          ushort patch,
 		                                                          string[] specialVersionParts)
 		{
 			var malformedSpecialPart = ".,";
@@ -70,6 +73,14 @@ namespace SemanticVersioning.Tests
 			Assert.Equal(minor, sut.Minor);
 			Assert.Equal(patch, sut.Patch);
 			Assert.Equal(expectedSpecialVersion, sut.SpecialVersion);
+		}
+
+		[Theory]
+		[InlineAutoData(SemanticVersionType.PreRelease)]
+		[InlineAutoData(SemanticVersionType.Build)]
+		public void SpecialVersionsDoesntAllowNullSpecialVersionParts(SemanticVersionType semVerType)
+		{
+			Assert.Throws<ArgumentNullException>(() => new SemanticVersion(0, 0, 0, null, semVerType));
 		}
 
 		private string FindSpecialVersionPrefix(SemanticVersionType semanticVersionType)

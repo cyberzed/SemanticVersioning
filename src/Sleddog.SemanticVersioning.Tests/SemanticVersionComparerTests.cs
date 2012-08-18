@@ -60,9 +60,9 @@ namespace SemanticVersioning.Tests
 		}
 
 		[Theory]
-		[InlineAutoData(SemanticVersionType.PreRelease, SemanticVersionType.Normal,-1)]
-		[InlineAutoData(SemanticVersionType.PreRelease, SemanticVersionType.Build,-1)]
-		[InlineAutoData(SemanticVersionType.Normal, SemanticVersionType.Build,-1)]
+		[InlineAutoData(SemanticVersionType.PreRelease, SemanticVersionType.Normal, -1)]
+		[InlineAutoData(SemanticVersionType.PreRelease, SemanticVersionType.Build, -1)]
+		[InlineAutoData(SemanticVersionType.Normal, SemanticVersionType.Build, -1)]
 		public void DifferentVersionsArentEqual(SemanticVersionType semVerType1, SemanticVersionType semVerType2, int expected)
 		{
 			var semVer1 = CreateZeroVersion(semVerType1);
