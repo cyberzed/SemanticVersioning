@@ -64,8 +64,7 @@ namespace SemanticVersioning.Tests
 		public void SpecialVersionsGetsSetCorrectly(SemanticVersionType semanticVersionType, ushort major, ushort minor, ushort patch,
 		                                            string[] specialVersionParts)
 		{
-			var prefix = FindSpecialVersionPrefix(semanticVersionType);
-			var expectedSpecialVersion = string.Format("{0}{1}", prefix, string.Join(".", specialVersionParts));
+			var expectedSpecialVersion = string.Join(".", specialVersionParts);
 
 			var sut = new SemanticVersion(major, minor, patch, specialVersionParts, semanticVersionType);
 
@@ -78,9 +77,47 @@ namespace SemanticVersioning.Tests
 		[Theory]
 		[InlineAutoData(SemanticVersionType.PreRelease)]
 		[InlineAutoData(SemanticVersionType.Build)]
-		public void SpecialVersionsDoesntAllowNullSpecialVersionParts(SemanticVersionType semVerType)
+		public void SpecialVersionsDoesntAllowNullSpecialVersionParts(SemanticVersionType semVerType, ushort major, ushort minor, ushort patch)
 		{
-			Assert.Throws<ArgumentNullException>(() => new SemanticVersion(0, 0, 0, null, semVerType));
+			Assert.Throws<ArgumentNullException>(() => new SemanticVersion(major, minor, patch, null, semVerType));
+		}
+
+		[Theory]
+		[InlineAutoData(SemanticVersionType.PreRelease)]
+		[InlineAutoData(SemanticVersionType.Build)]
+		public void ToStringFormatsCorrectlyWithSpecialVersions(SemanticVersionType semVerType, ushort major, ushort minor, ushort patch,
+		                                                        string[] specialVersions)
+		{
+			var semVer = new SemanticVersion(major, minor, patch, specialVersions, semVerType);
+
+			var expected = FormatVersion(semVer);
+
+			var actual = semVer.ToString();
+
+			Assert.Equal(expected, actual);
+		}
+
+		[Theory, AutoData]
+		public void ToStringFormatsCorrectlyWithNormalVersions(SemanticVersion semVer)
+		{
+			var expected = FormatVersion(semVer);
+
+			var actual = semVer.ToString();
+
+			Assert.Equal(expected, actual);
+		}
+
+		private string FormatVersion(SemanticVersion semVer)
+		{
+			switch (semVer.SemanticVersionType)
+			{
+				case SemanticVersionType.PreRelease:
+					return string.Format("{0}.{1}.{2}-{3}", semVer.Major, semVer.Minor, semVer.Patch, semVer.SpecialVersion);
+				case SemanticVersionType.Build:
+					return string.Format("{0}.{1}.{2}+{3}", semVer.Major, semVer.Minor, semVer.Patch, semVer.SpecialVersion);
+				default:
+					return string.Format("{0}.{1}.{2}", semVer.Major, semVer.Minor, semVer.Patch);
+			}
 		}
 
 		private string FindSpecialVersionPrefix(SemanticVersionType semanticVersionType)

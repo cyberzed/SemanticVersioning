@@ -53,7 +53,15 @@ namespace Sleddog.SemanticVersioning
 
 		public string SpecialVersion
 		{
-			get { return FormatSpecialVersion(); }
+			get
+			{
+				if (SemanticVersionType == SemanticVersionType.Normal)
+				{
+					return null;
+				}
+
+				return string.Join(".", specialVersionParts);
+			}
 		}
 
 		public SemanticVersionType SemanticVersionType { get; private set; }
