@@ -50,10 +50,32 @@ namespace Sleddog.SemanticVersioning
 
 		private int ComparePreReleaseVersion(SemanticVersion x, SemanticVersion y)
 		{
-			return -1;
+			return AdvancedCompare(x, y);
 		}
 
 		private int CompareNormalVersion(SemanticVersion x, SemanticVersion y)
+		{
+			return BasicCompare(x, y);
+		}
+
+		private int CompareBuildVersion(SemanticVersion x, SemanticVersion y)
+		{
+			return AdvancedCompare(x, y);
+		}
+
+		private int AdvancedCompare(SemanticVersion x, SemanticVersion y)
+		{
+			var basicResult = BasicCompare(x, y);
+
+			if (basicResult == 0)
+			{
+				return string.Compare(x.SpecialVersion, y.SpecialVersion, StringComparison.InvariantCulture);
+			}
+
+			return basicResult;
+		}
+
+		private int BasicCompare(SemanticVersion x, SemanticVersion y)
 		{
 			if (x.Major != y.Major)
 			{
@@ -71,11 +93,6 @@ namespace Sleddog.SemanticVersioning
 			}
 
 			return 0;
-		}
-
-		private int CompareBuildVersion(SemanticVersion x, SemanticVersion y)
-		{
-			return -1;
 		}
 	}
 }

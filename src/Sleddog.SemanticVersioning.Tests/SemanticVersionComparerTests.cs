@@ -63,7 +63,7 @@ namespace SemanticVersioning.Tests
 		[InlineAutoData(SemanticVersionType.PreRelease, SemanticVersionType.Normal, -1)]
 		[InlineAutoData(SemanticVersionType.PreRelease, SemanticVersionType.Build, -1)]
 		[InlineAutoData(SemanticVersionType.Normal, SemanticVersionType.Build, -1)]
-		public void DifferentVersionsArentEqual(SemanticVersionType semVerType1, SemanticVersionType semVerType2, int expected)
+		public void DifferentVersionTypesArentEqual(SemanticVersionType semVerType1, SemanticVersionType semVerType2, int expected)
 		{
 			var semVer1 = CreateZeroVersion(semVerType1);
 			var semVer2 = CreateZeroVersion(semVerType2);
@@ -93,6 +93,21 @@ namespace SemanticVersioning.Tests
 			var actual = sut.Compare(null, semVer);
 
 			Assert.True(actual < 0);
+		}
+
+		[Fact]
+		public void SmallerAlphanumericPreReleaseYieldsNegativeResult()
+		{
+			var semVer1 = new SemanticVersion(1, 2, 3, new[] {"aa"}, SemanticVersionType.PreRelease);
+			var semVer2 = new SemanticVersion(1, 2, 3, new[] {"bb"}, SemanticVersionType.PreRelease);
+
+			var expected = -1;
+
+			var sut = new SemanticVersionComparer();
+
+			var actual = sut.Compare(semVer1, semVer2);
+
+			Assert.Equal(expected, actual);
 		}
 
 		private SemanticVersion CreateZeroVersion(SemanticVersionType semVerType)
