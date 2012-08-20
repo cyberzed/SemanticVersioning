@@ -95,11 +95,13 @@ namespace SemanticVersioning.Tests
 			Assert.True(actual < 0);
 		}
 
-		[Fact]
-		public void SmallerAlphanumericPreReleaseYieldsNegativeResult()
+		[Theory]
+		[InlineAutoData(SemanticVersionType.PreRelease)]
+		[InlineAutoData(SemanticVersionType.Build)]
+		public void SmallerAlphanumericPreReleaseYieldsNegativeResult(SemanticVersionType semVerType)
 		{
-			var semVer1 = new SemanticVersion(1, 2, 3, new[] {"aa"}, SemanticVersionType.PreRelease);
-			var semVer2 = new SemanticVersion(1, 2, 3, new[] {"bb"}, SemanticVersionType.PreRelease);
+			var semVer1 = new SemanticVersion(1, 2, 3, new[] {"aa"}, semVerType);
+			var semVer2 = new SemanticVersion(1, 2, 3, new[] {"bb"}, semVerType);
 
 			var expected = -1;
 
@@ -110,11 +112,13 @@ namespace SemanticVersioning.Tests
 			Assert.Equal(expected, actual);
 		}
 
-		[Fact]
-		public void BiggerAlphaNumericPreReleaseYieldsPositiveResult()
+		[Theory]
+		[InlineAutoData(SemanticVersionType.PreRelease)]
+		[InlineAutoData(SemanticVersionType.Build)]
+		public void BiggerAlphaNumericPreReleaseYieldsPositiveResult(SemanticVersionType semVerType)
 		{
-			var semVer1 = new SemanticVersion(1, 2, 3, new[] {"bb"}, SemanticVersionType.PreRelease);
-			var semVer2 = new SemanticVersion(1, 2, 3, new[] {"aa"}, SemanticVersionType.PreRelease);
+			var semVer1 = new SemanticVersion(1, 2, 3, new[] {"bb"}, semVerType);
+			var semVer2 = new SemanticVersion(1, 2, 3, new[] {"aa"}, semVerType);
 
 			var expected = 1;
 
