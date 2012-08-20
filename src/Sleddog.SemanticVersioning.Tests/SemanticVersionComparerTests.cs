@@ -110,6 +110,21 @@ namespace SemanticVersioning.Tests
 			Assert.Equal(expected, actual);
 		}
 
+		[Fact]
+		public void BiggerAlphaNumericPreReleaseYieldsPositiveResult()
+		{
+			var semVer1 = new SemanticVersion(1, 2, 3, new[] {"bb"}, SemanticVersionType.PreRelease);
+			var semVer2 = new SemanticVersion(1, 2, 3, new[] {"aa"}, SemanticVersionType.PreRelease);
+
+			var expected = 1;
+
+			var sut = new SemanticVersionComparer();
+
+			var actual = sut.Compare(semVer1, semVer2);
+
+			Assert.Equal(expected, actual);
+		}
+
 		private SemanticVersion CreateZeroVersion(SemanticVersionType semVerType)
 		{
 			if (semVerType == SemanticVersionType.Normal)
