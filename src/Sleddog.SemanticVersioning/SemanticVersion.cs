@@ -9,12 +9,9 @@ namespace Sleddog.SemanticVersioning
 	{
 		private static readonly Regex SpecialVersionPartRegex = new Regex(@"[0-9A-Za-z-]+");
 
-		private readonly IDictionary<SemanticVersionType, Func<SemanticVersion, int>> comparisons =
-			new Dictionary<SemanticVersionType, Func<SemanticVersion, int>>();
-
 		private readonly List<string> specialVersionParts;
 
-		public SemanticVersion(ushort major, ushort minor, ushort patch) : this()
+		public SemanticVersion(ushort major, ushort minor, ushort patch)
 		{
 			Major = major;
 			Minor = minor;
@@ -24,7 +21,7 @@ namespace Sleddog.SemanticVersioning
 		}
 
 		public SemanticVersion(ushort major, ushort minor, ushort patch, IEnumerable<string> specialVersionParts,
-		                       SemanticVersionType semanticVersionType) : this()
+		                       SemanticVersionType semanticVersionType)
 		{
 			if (specialVersionParts == null)
 			{
@@ -48,12 +45,6 @@ namespace Sleddog.SemanticVersioning
 			this.specialVersionParts = specialPartsList;
 
 			SemanticVersionType = semanticVersionType;
-		}
-
-		private SemanticVersion()
-		{
-			comparisons.Add(SemanticVersionType.PreRelease, ComparePreReleaseVersion);
-			comparisons.Add(SemanticVersionType.Build, CompareBuildVersion);
 		}
 
 		public ushort Major { get; private set; }
@@ -118,7 +109,7 @@ namespace Sleddog.SemanticVersioning
 						return basicCompareResult;
 					}
 
-					return comparisons[xVersionType](other);
+					return AdvancedCompare(other);
 				}
 				else
 				{
@@ -135,16 +126,6 @@ namespace Sleddog.SemanticVersioning
 		public bool Equals(SemanticVersion other)
 		{
 			return CompareTo(other) == 0;
-		}
-
-		private int ComparePreReleaseVersion(SemanticVersion other)
-		{
-			return AdvancedCompare(other);
-		}
-
-		private int CompareBuildVersion(SemanticVersion other)
-		{
-			return AdvancedCompare(other);
 		}
 
 		private int AdvancedCompare(SemanticVersion y)
