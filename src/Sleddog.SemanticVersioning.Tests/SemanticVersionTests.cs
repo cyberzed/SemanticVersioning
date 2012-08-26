@@ -198,9 +198,15 @@ namespace SemanticVersioning.Tests
 		}
 
 		[Theory, AutoData]
-		public void SemVerDoesntPlayWellWithOthers(SemanticVersion semVer)
+		public void SemVerDoesntCompareWithValueTypes(SemanticVersion semVer)
 		{
 			Assert.Throws<ArgumentException>(() => semVer.CompareTo(5));
+		}
+
+		[Theory, AutoData]
+		public void SemVerDoesntCompareWithReferenceTypes(SemanticVersion semVer)
+		{
+			Assert.Throws<ArgumentException>(() => semVer.CompareTo(new EventArgs()));
 		}
 
 		private SemanticVersion CreateZeroVersion(SemanticVersionType semVerType)
