@@ -9,9 +9,12 @@ namespace Sleddog.SemanticVersioning
 	{
 		private static readonly Regex SpecialVersionPartRegex = new Regex(@"[0-9A-Za-z-]+");
 
+		private readonly IDictionary<SemanticVersionType, Func<SemanticVersion, int>> comparisons =
+			new Dictionary<SemanticVersionType, Func<SemanticVersion, int>>();
+
 		private readonly List<string> specialVersionParts;
 
-		public SemanticVersion(ushort major, ushort minor, ushort patch)
+		public SemanticVersion(ushort major, ushort minor, ushort patch) : this()
 		{
 			Major = major;
 			Minor = minor;
@@ -21,7 +24,7 @@ namespace Sleddog.SemanticVersioning
 		}
 
 		public SemanticVersion(ushort major, ushort minor, ushort patch, IEnumerable<string> specialVersionParts,
-		                       SemanticVersionType semanticVersionType)
+		                       SemanticVersionType semanticVersionType) : this()
 		{
 			if (specialVersionParts == null)
 			{
@@ -45,6 +48,12 @@ namespace Sleddog.SemanticVersioning
 			this.specialVersionParts = specialPartsList;
 
 			SemanticVersionType = semanticVersionType;
+		}
+
+		private SemanticVersion()
+		{
+			comparisons.Add(SemanticVersionType.PreRelease, ComparePreReleaseVersion);
+			comparisons.Add(SemanticVersionType.Build, CompareBuildVersion);
 		}
 
 		public ushort Major { get; private set; }
@@ -85,12 +94,89 @@ namespace Sleddog.SemanticVersioning
 
 		public int CompareTo(SemanticVersion other)
 		{
-			throw new NotImplementedException();
+			if (this == other)
+			{
+				return 0;
+			}
+
+			if (other == null)
+			{
+				return 1;
+			}
+
+			var basicCompareResult = BasicCompare(other);
+
+			if (basicCompareResult == 0)
+			{
+				var xVersionType = SemanticVersionType;
+				var yVersionType = other.SemanticVersionType;
+
+				if (xVersionType == yVersionType)
+				{
+					if (xVersionType == SemanticVersionType.Normal)
+					{
+						return basicCompareResult;
+					}
+
+					return comparisons[xVersionType](other);
+				}
+				else
+				{
+					var xVersionValue = (int) xVersionType;
+					var yVersionValue = (int) yVersionType;
+
+					return xVersionValue.CompareTo(yVersionValue);
+				}
+			}
+
+			return basicCompareResult;
 		}
 
 		public bool Equals(SemanticVersion other)
 		{
-			throw new NotImplementedException();
+			return CompareTo(other) == 0;
+		}
+
+		private int ComparePreReleaseVersion(SemanticVersion other)
+		{
+			return AdvancedCompare(other);
+		}
+
+		private int CompareBuildVersion(SemanticVersion other)
+		{
+			return AdvancedCompare(other);
+		}
+
+		private int AdvancedCompare(SemanticVersion y)
+		{
+			var basicResult = BasicCompare(y);
+
+			if (basicResult == 0)
+			{
+				return string.Compare(SpecialVersion, y.SpecialVersion, StringComparison.InvariantCulture);
+			}
+
+			return basicResult;
+		}
+
+		private int BasicCompare(SemanticVersion other)
+		{
+			if (Major != other.Major)
+			{
+				return Major.CompareTo(other.Major);
+			}
+
+			if (Minor != other.Minor)
+			{
+				return Minor.CompareTo(other.Minor);
+			}
+
+			if (Patch != other.Patch)
+			{
+				return Patch.CompareTo(other.Patch);
+			}
+
+			return 0;
 		}
 
 		private void ValidateSpecialVersionParts(IEnumerable<string> versionParts)

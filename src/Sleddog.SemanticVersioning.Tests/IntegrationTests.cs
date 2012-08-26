@@ -38,7 +38,7 @@ namespace SemanticVersioning.Tests
 
 			actual.Shuffle();
 
-			actual.Sort(new SemanticVersionComparer());
+			actual.Sort();
 
 			Assert.True(expected.SequenceEqual(actual));
 		}
