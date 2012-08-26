@@ -68,11 +68,6 @@ namespace Sleddog.SemanticVersioning
 
 		public int CompareTo(object obj)
 		{
-			if (obj == null)
-			{
-				return 1;
-			}
-
 			var otherSemVer = obj as SemanticVersion;
 
 			if (otherSemVer == null)
@@ -95,7 +90,7 @@ namespace Sleddog.SemanticVersioning
 				return 1;
 			}
 
-			var basicCompareResult = BasicCompare(other);
+			var basicCompareResult = BasicVersionCompare(other);
 
 			if (basicCompareResult == 0)
 			{
@@ -109,7 +104,8 @@ namespace Sleddog.SemanticVersioning
 						return basicCompareResult;
 					}
 
-					return AdvancedCompare(other);
+					if (basicCompareResult == 0)
+						return string.Compare(SpecialVersion, other.SpecialVersion, StringComparison.InvariantCulture);
 				}
 				else
 				{
@@ -128,19 +124,7 @@ namespace Sleddog.SemanticVersioning
 			return CompareTo(other) == 0;
 		}
 
-		private int AdvancedCompare(SemanticVersion y)
-		{
-			var basicResult = BasicCompare(y);
-
-			if (basicResult == 0)
-			{
-				return string.Compare(SpecialVersion, y.SpecialVersion, StringComparison.InvariantCulture);
-			}
-
-			return basicResult;
-		}
-
-		private int BasicCompare(SemanticVersion other)
+		private int BasicVersionCompare(SemanticVersion other)
 		{
 			if (Major != other.Major)
 			{

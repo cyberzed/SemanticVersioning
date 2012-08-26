@@ -5,7 +5,7 @@ using Xunit;
 
 namespace SemanticVersioning.Tests
 {
-	public class IntegrationTests
+	public class InteractionTest
 	{
 		[Fact]
 		public void SortWithComparer()
