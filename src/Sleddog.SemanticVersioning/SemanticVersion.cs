@@ -57,7 +57,7 @@ namespace Sleddog.SemanticVersioning
 			{
 				if (SemanticVersionType == SemanticVersionType.Normal)
 				{
-					return null;
+					return string.Empty;
 				}
 
 				return string.Join(".", specialVersionParts);

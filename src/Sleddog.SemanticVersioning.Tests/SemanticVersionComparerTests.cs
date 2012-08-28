@@ -122,6 +122,46 @@ namespace SemanticVersioning.Tests
 			Assert.Equal(expected, actual);
 		}
 
+		[Theory, AutoData ]
+		public void DifferentSemVersArentEqual(SemanticVersion semVer1, SemanticVersion semVer2)
+		{
+			const bool expected = true;
+
+			var actual = semVer1 != semVer2;
+
+			Assert.Equal(expected, actual);
+		}
+		
+		[Theory, AutoData]
+		public void SemVerArentEqualToNull(SemanticVersion semVer)
+		{
+			const bool expected = false;
+
+			var actual = semVer.Equals(null);
+
+			Assert.Equal(expected, actual);
+		}
+
+		[Theory ,AutoData]
+		public void SemVerArentEqualToStringEmpty(SemanticVersion semVer)
+		{
+			const bool expected = false;
+
+			var actual = semVer.Equals(string.Empty);
+
+			Assert.Equal(expected, actual);
+		}
+
+		[Theory, AutoData]
+		public void SemVerEqualsItself(SemanticVersion semVer)
+		{
+			const bool expected = true;
+
+			var actual = semVer.Equals(semVer);
+
+			Assert.Equal(expected, actual);
+		}
+
 		private SemanticVersion CreateZeroVersion(SemanticVersionType semVerType)
 		{
 			if (semVerType == SemanticVersionType.Normal)

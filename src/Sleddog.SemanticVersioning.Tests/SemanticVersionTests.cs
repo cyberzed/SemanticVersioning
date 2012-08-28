@@ -55,7 +55,7 @@ namespace SemanticVersioning.Tests
 			Assert.Equal(major, sut.Major);
 			Assert.Equal(minor, sut.Minor);
 			Assert.Equal(patch, sut.Patch);
-			Assert.Null(sut.SpecialVersion);
+			Assert.Equal(string.Empty, sut.SpecialVersion);
 		}
 
 		[Theory]
@@ -107,6 +107,44 @@ namespace SemanticVersioning.Tests
 			Assert.Equal(expected, actual);
 		}
 
+		[Theory, AutoData]
+		public void NormalTypeHashCodeVerification(ushort major, ushort minor, ushort patch)
+		{
+			var semVer = new SemanticVersion(major, minor, patch);
+
+			var expected = GetSemVerHashCode(semVer);
+
+			var actual = semVer.GetHashCode();
+
+			Assert.Equal(expected, actual);
+		}
+
+		[Theory]
+		[InlineAutoData(SemanticVersionType.PreRelease)]
+		[InlineAutoData(SemanticVersionType.Build)]
+		public void SpecialTypeHashCodeVerification(SemanticVersionType semVerType, ushort major, ushort minor, ushort patch,
+		                                            string[] specialParts)
+		{
+			var semVer = new SemanticVersion(major, minor, patch, specialParts, semVerType);
+
+			var expected = GetSemVerHashCode(semVer);
+
+			var actual = semVer.GetHashCode();
+
+			Assert.Equal(expected, actual);
+		}
+
+		private int GetSemVerHashCode(SemanticVersion semVer)
+		{
+			var hashCode = semVer.Major.GetHashCode();
+
+			hashCode = (hashCode*397) ^ semVer.Minor.GetHashCode();
+			hashCode = (hashCode*397) ^ semVer.Patch.GetHashCode();
+			hashCode = (hashCode*397) ^ semVer.SpecialVersion.GetHashCode();
+			hashCode = (hashCode*397) ^ semVer.SemanticVersionType.GetHashCode();
+
+			return hashCode;
+		}
 
 		private string FormatVersion(SemanticVersion semVer)
 		{
