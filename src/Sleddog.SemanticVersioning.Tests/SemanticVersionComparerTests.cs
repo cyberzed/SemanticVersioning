@@ -76,7 +76,7 @@ namespace SemanticVersioning.Tests
 			var semVer1 = new SemanticVersion(1, 2, 3, new[] { "aa" }, semVerType);
 			var semVer2 = new SemanticVersion(1, 2, 3, new[] { "bb" }, semVerType);
 
-			var expected = -1;
+			const int expected = -1;
 
 			var actual = semVer1.CompareTo(semVer2);
 
@@ -91,7 +91,7 @@ namespace SemanticVersioning.Tests
 			var semVer1 = new SemanticVersion(1, 2, 3, new[] { "bb" }, semVerType);
 			var semVer2 = new SemanticVersion(1, 2, 3, new[] { "aa" }, semVerType);
 
-			var expected = 1;
+			const int expected = 1;
 
 			var actual = semVer1.CompareTo(semVer2);
 
@@ -115,7 +115,8 @@ namespace SemanticVersioning.Tests
 		{
 			object input = semVer;
 
-			var expected = 0;
+			const int expected = 0;
+
 			var actual = semVer.CompareTo(input);
 
 			Assert.Equal(expected, actual);

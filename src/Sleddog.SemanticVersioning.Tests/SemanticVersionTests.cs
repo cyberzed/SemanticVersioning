@@ -40,7 +40,7 @@ namespace SemanticVersioning.Tests
 		                                                          ushort patch,
 		                                                          string[] specialVersionParts)
 		{
-			var malformedSpecialPart = ".,";
+			const string malformedSpecialPart = ".,";
 
 			var versionParts = specialVersionParts.Concat(new[] {malformedSpecialPart});
 

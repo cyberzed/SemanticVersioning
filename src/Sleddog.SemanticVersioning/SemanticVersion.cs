@@ -75,17 +75,17 @@ namespace Sleddog.SemanticVersioning
 				throw new ArgumentException("Can not compare to something that is not a SemanticVersion", "obj");
 			}
 
-			return CompareTo(otherSemVer);
+			return CompareTo(obj as SemanticVersion);
 		}
 
 		public int CompareTo(SemanticVersion other)
 		{
-			if (this == other)
+			if (ReferenceEquals(this, other))
 			{
 				return 0;
 			}
 
-			if (other == null)
+			if (ReferenceEquals(other, null))
 			{
 				return 1;
 			}
@@ -105,7 +105,9 @@ namespace Sleddog.SemanticVersioning
 					}
 
 					if (basicCompareResult == 0)
+					{
 						return string.Compare(SpecialVersion, other.SpecialVersion, StringComparison.InvariantCulture);
+					}
 				}
 				else
 				{
@@ -191,6 +193,43 @@ namespace Sleddog.SemanticVersioning
 					return "+";
 				default:
 					return string.Empty;
+			}
+		}
+
+		public static bool operator ==(SemanticVersion left, SemanticVersion right)
+		{
+			if (ReferenceEquals(left, null))
+			{
+				return ReferenceEquals(right, null);
+			}
+
+			return left.Equals(right);
+		}
+
+		public static bool operator !=(SemanticVersion left, SemanticVersion right)
+		{
+			return !(left == right);
+		}
+
+		public override bool Equals(object obj)
+		{
+			var semVer = obj as SemanticVersion;
+
+			return !ReferenceEquals(null, semVer) && Equals(semVer);
+		}
+
+		public override int GetHashCode()
+		{
+			unchecked
+			{
+				var result = Major.GetHashCode();
+
+				result = (result*397) ^ Minor.GetHashCode();
+				result = (result*397) ^ Patch.GetHashCode();
+				result = (result*397) ^ SpecialVersion.GetHashCode();
+				result = (result*397) ^ SemanticVersionType.GetHashCode();
+
+				return result;
 			}
 		}
 	}
