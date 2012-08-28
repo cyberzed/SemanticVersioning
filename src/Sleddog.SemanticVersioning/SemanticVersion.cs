@@ -99,15 +99,7 @@ namespace Sleddog.SemanticVersioning
 
 				if (xVersionType == yVersionType)
 				{
-					if (xVersionType == SemanticVersionType.Normal)
-					{
-						return basicCompareResult;
-					}
-
-					if (basicCompareResult == 0)
-					{
-						return string.Compare(SpecialVersion, other.SpecialVersion, StringComparison.InvariantCulture);
-					}
+					return string.Compare(SpecialVersion, other.SpecialVersion, StringComparison.InvariantCulture);
 				}
 				else
 				{
@@ -161,13 +153,11 @@ namespace Sleddog.SemanticVersioning
 		{
 			switch (SemanticVersionType)
 			{
-				case SemanticVersionType.Normal:
+				default:
 					return string.Format("{0}.{1}.{2}", Major, Minor, Patch);
 				case SemanticVersionType.PreRelease:
 				case SemanticVersionType.Build:
 					return string.Format("{0}.{1}.{2}{3}", Major, Minor, Patch, FormatSpecialVersion());
-				default:
-					return base.ToString();
 			}
 		}
 
@@ -179,7 +169,7 @@ namespace Sleddog.SemanticVersioning
 				case SemanticVersionType.Build:
 					return string.Format("{0}{1}", FindVersionTypePrefix(), string.Join(".", specialVersionParts));
 				default:
-					return null;
+					return string.Empty;
 			}
 		}
 
