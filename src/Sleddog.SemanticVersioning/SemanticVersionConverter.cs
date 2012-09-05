@@ -20,6 +20,21 @@ namespace Sleddog.SemanticVersioning
 				throw new ArgumentNullException("ver");
 			}
 
+			if (ver.Major > UInt16.MaxValue)
+			{
+				throw new ArgumentOutOfRangeException("ver", "Major value is bigger than UInt16.MaxValue which aren't allowed");
+			}
+
+			if (ver.Minor > UInt16.MaxValue)
+			{
+				throw new ArgumentOutOfRangeException("ver", "Minor value is bigger than UInt16.MaxValue which aren't allowed");
+			}
+
+			if (ver.Build > UInt16.MaxValue)
+			{
+				throw new ArgumentOutOfRangeException("ver", "Build value is bigger than UInt16.MaxValue which aren't allowed");
+			}
+
 			var major = System.Convert.ToUInt16(ver.Major);
 			var minor = System.Convert.ToUInt16(ver.Minor);
 			var patch = System.Convert.ToUInt16(ver.Build);

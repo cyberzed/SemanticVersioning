@@ -20,18 +20,46 @@ namespace SemanticVersioning.Tests
 			);
 
 		[Theory, AutoData]
-		public void ConvertsVersion(int major, int minor, int build)
+		public void AcceptsVersion(int major, int minor, int build)
 		{
-			var ver = new Version(major, minor, build);
+			var version = new Version(major, minor, build);
 
 			var sut = new SemanticVersionConverter();
 
-			var version = sut.Convert(ver);
+			var actual = sut.Convert(version);
 
-			Assert.NotNull(version);
+			Assert.NotNull(actual);
 		}
 
-		//add verification of version
+		[Theory]
+		[InlineAutoData(0, 0, 0)]
+		[InlineAutoData(1, 2, 3)]
+		[InlineAutoData(10, 20, 30)]
+		public void ConvertsVersionCorrectly(int major, int minor, int build)
+		{
+			var expected = new VersionResult {Major = (ushort) major, Minor = (ushort) minor, Patch = (ushort) build};
+
+			var version = new Version(major, minor, build);
+
+			var sut = new SemanticVersionConverter();
+
+			var actual = sut.Convert(version);
+
+			actual.AsSource().OfLikeness<VersionResult>().ShouldEqual(expected);
+		}
+
+		[Theory]
+		[InlineAutoData(int.MaxValue, 0, 0)]
+		[InlineAutoData(0, int.MaxValue, 0)]
+		[InlineAutoData(0, 0, int.MaxValue)]
+		public void DoesntAcceptValuesBiggerThanUShort(int major, int minor, int build)
+		{
+			var version = new Version(major, minor, build);
+
+			var sut = new SemanticVersionConverter();
+
+			Assert.Throws<ArgumentOutOfRangeException>(() => sut.Convert(version));
+		}
 
 		[Theory]
 		[InlineAutoData("0.0.0")]
