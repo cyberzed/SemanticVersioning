@@ -61,7 +61,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="InteractionTest.cs" />
-    <Compile Include="SemanticVersionBuilderTests.cs" />
+    <Compile Include="SemanticVersionConverterTests.cs" />
     <Compile Include="SemanticVersionComparerTests.cs" />
     <Compile Include="SemanticVersionTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
