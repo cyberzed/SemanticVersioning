@@ -15,6 +15,11 @@ namespace Sleddog.SemanticVersioning
 
 		public SemanticVersion Convert(Version ver)
 		{
+			if (ver == null)
+			{
+				throw new ArgumentNullException("ver");
+			}
+
 			var major = System.Convert.ToUInt16(ver.Major);
 			var minor = System.Convert.ToUInt16(ver.Minor);
 			var patch = System.Convert.ToUInt16(ver.Build);
@@ -24,6 +29,11 @@ namespace Sleddog.SemanticVersioning
 
 		public SemanticVersion Convert(string versionString)
 		{
+			if (versionString == null)
+			{
+				throw new ArgumentNullException("versionString");
+			}
+
 			var semVerMatch = SemVerFormat.Match(versionString);
 
 			if (!semVerMatch.Success)
