@@ -66,6 +66,7 @@
     <Compile Include="SemanticVersionTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ListExt.cs" />
+    <Compile Include="VersionResult.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

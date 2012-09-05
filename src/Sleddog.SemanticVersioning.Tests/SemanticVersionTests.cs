@@ -4,6 +4,7 @@ using Ploeh.AutoFixture.Xunit;
 using Sleddog.SemanticVersioning;
 using Xunit;
 using Xunit.Extensions;
+using Ploeh.SemanticComparison.Fluent;
 
 namespace SemanticVersioning.Tests
 {
@@ -50,12 +51,11 @@ namespace SemanticVersioning.Tests
 		[Theory, AutoData]
 		public void NormalTypeValuesGetsSetCorrectly(ushort major, ushort minor, ushort patch)
 		{
-			var sut = new SemanticVersion(major, minor, patch);
+			var expected = new VersionResult {Major = major, Minor = minor, Patch = patch};
 
-			Assert.Equal(major, sut.Major);
-			Assert.Equal(minor, sut.Minor);
-			Assert.Equal(patch, sut.Patch);
-			Assert.Equal(string.Empty, sut.SpecialVersion);
+			var actual = new SemanticVersion(major, minor, patch);
+
+			actual.AsSource().OfLikeness<VersionResult>().ShouldEqual(expected);
 		}
 
 		[Theory]
@@ -66,12 +66,18 @@ namespace SemanticVersioning.Tests
 		{
 			var expectedSpecialVersion = string.Join(".", specialVersionParts);
 
-			var sut = new SemanticVersion(major, minor, patch, specialVersionParts, semanticVersionType);
+			var expected = new VersionResult
+			               	{
+			               		Major = major,
+			               		Minor = minor,
+			               		Patch = patch,
+			               		SemanticVersionType = semanticVersionType,
+			               		SpecialVersion = expectedSpecialVersion
+			               	};
 
-			Assert.Equal(major, sut.Major);
-			Assert.Equal(minor, sut.Minor);
-			Assert.Equal(patch, sut.Patch);
-			Assert.Equal(expectedSpecialVersion, sut.SpecialVersion);
+			var actual = new SemanticVersion(major, minor, patch, specialVersionParts, semanticVersionType);
+
+			actual.AsSource().OfLikeness<VersionResult>().ShouldEqual(expected);
 		}
 
 		[Theory]
