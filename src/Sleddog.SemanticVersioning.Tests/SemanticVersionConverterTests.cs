@@ -117,6 +117,14 @@ namespace SemanticVersioning.Tests
 			actual.AsSource().OfLikeness<VersionResult>().ShouldEqual(expected);
 		}
 
+		[Theory, AutoData]
+		public void InvalidVersionStringThrowsArgumentException(string versionString)
+		{
+			var sut = new SemanticVersionConverter();
+
+			Assert.Throws<ArgumentException>(() => sut.Convert(versionString));
+		}
+
 		private VersionResult ExtractNormalVersion(string normalVersionString)
 		{
 			var versionMatch = NormalVersionRegex.Match(normalVersionString);
